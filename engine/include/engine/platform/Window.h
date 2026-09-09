@@ -22,13 +22,17 @@
 // ============================================================================
 
 #include <engine/platform/SdlHandles.h>
+#include <engine/core/Subsystem.h>
 
 #include <string>
 
 namespace eng {
 
-class Window {
+class Window : public Subsystem{
 public:
+
+    bool Init(const BootConfig& config) override;
+    void Shutdown() override;
     // Opens a window of the given size with the given title.
     //
     // If anything fails - no display attached, a driver problem - the object

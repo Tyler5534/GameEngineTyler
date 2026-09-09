@@ -107,7 +107,7 @@ public:
     // Flushes and closes the file. The log is started first and shut down last
     // of everything in the engine, so that a subsystem can still report a
     // problem while it is being torn down.
-    static void Shutdown();
+    void Shutdown() override;
 
     static bool IsInitialised();
 

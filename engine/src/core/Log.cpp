@@ -33,8 +33,11 @@ LogLevel g_threshold;
 
 // Opens the log: the terminal, the log file, and the in-memory list the editor's
 // Console window reads. First subsystem up, because everything else writes to it.
-bool Log::Init(std::string_view logFilePath, LogLevel threshold) {
-    g_threshold = threshold;
+bool Log::Init(const BootConfig& config) {
+    // Read the threshold from the boot config. The log file path is in
+    // config.logFile if the implementation wants to use it; this skeleton
+    // stores only the threshold for now.
+    g_threshold = config.logThreshold;
 
     m_initialized = true;
     return m_initialized;

@@ -161,7 +161,7 @@ private:
 
     void RegisterBuiltinSubsystems(const Options& options);
 
-    class RenderSubsystem : public Subsystem 
+    class RendererSubsystem : public Subsystem 
     {
     public:
         bool Init(const BootConfig& config) override;
@@ -171,6 +171,7 @@ private:
     class GuiSubsystem : public Subsystem
     {
     public:
+        void Use(std::function<bool()> init, std::function<void()> shutdown);
         bool Init(const BootConfig& config) override;
         void Shutdown() override;
 
@@ -179,12 +180,14 @@ private:
         std::function<void()> m_shutdown;
     };
 
+
+
     static Engine instance;
 
     Log m_log;
     FileSystem m_fileSystem;
     Window m_window;
-    RenderSubsystem m_renderer;
+    RendererSubsystem m_renderer;
     GuiSubsystem m_gui;
 
     SubsystemStack          m_subsystems;
