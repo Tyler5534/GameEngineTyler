@@ -3,6 +3,7 @@
 //  empty body. Log.h is the specification; read it before filling one in.
 // =============================================================================
 
+#include <engine/core/Config.h>
 #include <engine/core/Log.h>
 
 namespace eng {

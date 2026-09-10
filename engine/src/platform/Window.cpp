@@ -7,11 +7,11 @@
 
 namespace eng {
 
-    bool Init(const BootConfig& config) {
+    bool Window::Init(const BootConfig& config) {
     return false;
     }
 
-    void Shutdown() {
+    void Window::Shutdown() {
     }
 
 // Opens an operating-system window of the given size, and the object that draws

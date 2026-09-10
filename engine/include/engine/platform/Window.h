@@ -30,6 +30,7 @@ namespace eng {
 
 class Window : public Subsystem{
 public:
+    Window() = default;
 
     bool Init(const BootConfig& config) override;
     void Shutdown() override;
