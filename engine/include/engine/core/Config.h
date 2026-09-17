@@ -40,7 +40,7 @@ struct BootConfig {
     // "window"
     int         windowWidth  = 1280;
     int         windowHeight = 720;
-    std::string windowTitle  = "Engine2D";
+    std::string windowTitle  = "Teej";
 
     // "logging"
     LogLevel    logThreshold = LogLevel::Info;

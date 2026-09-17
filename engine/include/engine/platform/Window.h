@@ -27,7 +27,7 @@
 #include <string>
 
 namespace eng {
-
+    
 class Window : public Subsystem{
 public:
     Window() = default;
@@ -45,7 +45,7 @@ public:
 
     // Closes the renderer first and then the window, in that order. A window
     // destroyed out from under its own renderer is a crash.
-    ~Window();
+    ~Window() override;
 
     Window(const Window&)            = delete;
     Window& operator=(const Window&) = delete;
@@ -89,7 +89,7 @@ private:
     RendererPtr m_renderer;
 
     bool        m_videoInitialised = false;
-    std::string m_title;
+    std::string m_title = "Teej";
 };
 
 } // namespace eng
