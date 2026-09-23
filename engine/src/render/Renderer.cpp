@@ -6,14 +6,13 @@
 //  is y-up, and the single place the two are reconciled is Camera::ViewMatrix.
 // =============================================================================
 
-#include <engine/render/Renderer.h>
 #include <engine/core/Log.h>
 #include <engine/platform/Window.h>
+#include <engine/render/Renderer.h>
 
 #include <SDL3/SDL.h>
 
 #include <algorithm>
-
 
 namespace eng {
 namespace {
@@ -55,7 +54,8 @@ void Renderer::Shutdown() {
 // Is there something to draw with? Everything below quietly does nothing when
 // there is not.
 bool Renderer::IsValid() {
-    return g_renderer != nullptr; //nullptr = 0 which returns false so unnecessary ,but here for posterity
+    return g_renderer !=
+           nullptr; // nullptr = 0 which returns false so unnecessary ,but here for posterity
 }
 
 // The underlying SDL renderer, for the editor's interface and the texture
@@ -109,7 +109,7 @@ bool RenderTarget::Resize(int width, int height) {
 
     if (m_texture == nullptr) {
         ENGINE_LOG_ERROR(Channels::kRender, "could not create a {}x{} view: {}", width, height,
-                         SDL_GetError()); 
+                         SDL_GetError());
         m_width = 0;
         m_height = 0;
         return false;
@@ -126,8 +126,8 @@ bool RenderTarget::Resize(int width, int height) {
 // Sends everything drawn from now on into an off-screen picture instead of the
 // window. Passing nullptr goes back to the window.
 void Renderer::SetRenderTarget(RenderTarget* target) {
-    if (g_renderer == nullptr ) {
-        return; 
+    if (g_renderer == nullptr) {
+        return;
     }
     SDL_Texture* texture = (target != nullptr && target->IsValid())
                                ? static_cast<SDL_Texture*>(target->NativeTexture())
@@ -153,7 +153,6 @@ void Renderer::Clear(Color color) {
     }
     ApplyColor(color);
     SDL_RenderClear(g_renderer);
-
 }
 
 // Shows the finished frame in the window.
@@ -164,7 +163,7 @@ void Renderer::Present() {
 }
 
 // Draws a one-pixel line between two points.
-void Renderer::DrawLine(Vec2 a , Vec2 b, Color color) {
+void Renderer::DrawLine(Vec2 a, Vec2 b, Color color) {
     if (g_renderer == nullptr) {
         return;
     }
@@ -183,7 +182,8 @@ void Renderer::DrawRect(Vec2 min, Vec2 max, Color color) {
         min.x,
         min.y,
         max.x - min.x,
-        max.y - min.y, };
+        max.y - min.y,
+    };
     SDL_RenderRect(g_renderer, &rect);
 }
 
@@ -197,7 +197,8 @@ void Renderer::DrawFilledRect(Vec2 min, Vec2 max, Color color) {
         min.x,
         min.y,
         max.x - min.x,
-        max.y - min.y, };
+        max.y - min.y,
+    };
     SDL_RenderFillRect(g_renderer, &rect);
 }
 
@@ -233,12 +234,47 @@ float Renderer::TextCharWidth() {
 
 // Draws a line of text with the built-in font, starting at its top-left corner.
 void Renderer::DrawText(Vec2 topLeft, const char* text, Color color) {
+    if (g_renderer == nullptr || text == nullptr) {
+        return;
+    }
+    ApplyColor(color);
+
+    if (g_textScale != 1.0f) {
+        float sx = 1.0f;
+        float sy = 1.0f;
+
+        SDL_GetRenderScale(g_renderer, &sx, &sy);
+        SDL_SetRenderScale(g_renderer, g_textScale, g_textScale);
+        SDL_RenderDebugText(g_renderer, topLeft.x / g_textScale, topLeft.y / g_textScale, text);
+        SDL_SetRenderScale(g_renderer, sx, sy);
+    } else {
+        SDL_RenderDebugText(g_renderer, topLeft.x, topLeft.y, text);
+    }
 }
 
 // Draws a picture centred on a point, at a size, turned by an angle, with its
 // colours multiplied by a tint. This is the one call that puts a sprite on screen.
-void Renderer::DrawSprite(const TextureRef& texture, Vec2 centre, Vec2 size,
-                          float rotationDegrees, Color tint) {
+void Renderer::DrawSprite(const TextureRef& texture, Vec2 center, Vec2 size, float rotationDegrees,
+                          Color tint) {
+    if (g_renderer == nullptr) {
+        return;
+    }
+
+    if (!texture || texture->native == nullptr) {
+        return;
+    }
+
+    auto* sdlTexture = static_cast<SDL_Texture*>(texture->native);
+
+    SDL_SetTextureColorMod(sdlTexture, tint.r, tint.g, tint.b);
+    SDL_SetTextureAlphaMod(sdlTexture, tint.a);
+    SDL_SetTextureBlendMode(sdlTexture, SDL_BLENDMODE_BLEND);
+
+    SDL_FRect dst{center.x - size.x * 0.5f, center.y - size.y * 0.5f, size.x, size.y};
+    SDL_FPoint pivot{size.x * 0.5f, size.y * 0.5f};
+
+    SDL_RenderTextureRotated(g_renderer, sdlTexture, nullptr, &dst,
+                             static_cast<double>(rotationDegrees), &pivot, SDL_FLIP_NONE);
 }
 
 } // namespace eng

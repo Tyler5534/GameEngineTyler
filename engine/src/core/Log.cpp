@@ -145,7 +145,7 @@ void Log::Write(std::string_view channel, LogLevel level,
     record.message.assign(message);
 
     LogBuffer::Append(record); // The Editors console window output
-    const std::string line = std::format("[{:9.3f}] [{:>7}] [{:<12}] | {}",
+    const std::string line = std::format("\n[{:9.3f}] [{:>7}] [{:<12}] | {}",
                                         record.timeSeconds, ToString(level),
                                         record.channel, record.message);
 
