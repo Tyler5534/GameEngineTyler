@@ -433,51 +433,42 @@ void Engine::Simulate() {
     for (int step = 0; step < m_stepsThisFrame; ++step) {
         const float fixedStep = m_clock.FixedStepSeconds();
 
-        // Stages 100 to 500: gameplay, movement, collision. See SystemOrder.h.
+        //stages 100 - 500
         SystemScheduler::UpdateRange(0, SystemStage::kCollisionResponse, fixedStep);
 
-        // Stage 500: deliver messages. Every handler runs here and nowhere else.
+        //stage 500
         MessageBus::Dispatch();
 
-        // Stage 600: create and destroy entities, at one defined point.
+        //stage 600
         if (m_scene != nullptr) {
             DeferredOps::Apply(*m_scene);
         }
 
-        // Stage 700: the camera, after everything it might follow has moved.
-        SystemScheduler::UpdateRange(SystemStage::kDeferred + 1,
-                                     SystemStage::kFirstRenderStage, fixedStep);
+        //stage 700 - camera
+        SystemScheduler::UpdateRange(SystemStage::kDeferred + 1, SystemStage::kFirstRenderStage,
+                                     fixedStep);
 
         m_clock.OnStepConsumed();
     }
 }
 
 void Engine::RenderWorld(Camera& camera, bool includeGizmos) {
-    // The camera sizes itself from whatever is currently being drawn into, so
-    // this same call frames the world correctly whether it is filling the
-    // whole window or a small panel in the editor.
     camera.SetViewportSize(Renderer::OutputSize());
 
-    Renderer::Clear(Color{18, 18, 22, 255});
+    Renderer::Clear(Color{18, 53, 84, 255});
 
     SpriteRenderSystem::Render(camera);
 
-    // Stages 800 and above, for anything a game wants drawn between the
-    // sprites and the gizmos.
     SystemScheduler::RenderPass(m_clock.RealDeltaSeconds());
 
-    // Gizmos last, so they land on top of everything else.
     if (includeGizmos) {
         Gizmos::Render(camera);
     }
 }
 
 void Engine::RenderFrame() {
-    RenderWorld(m_camera, /*includeGizmos=*/true);
+    RenderWorld(m_camera, true);
 
-    // The standalone game has exactly one view, so it also ages the gizmo
-    // queue here. The editor does this itself, after BOTH of its views have
-    // drawn the same queue.
     Gizmos::EndFrame(m_clock.RealDeltaSeconds());
 }
 
