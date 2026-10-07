@@ -62,7 +62,7 @@ public:
     Entity(const Entity&)            = delete;
     Entity& operator=(const Entity&) = delete;
 
-    EntityId           Id() const   { return m_id; }
+   EntityId           Id() const   { return m_id; }
     const std::string& Name() const { return m_name; }
     Scene*             GetScene() const { return m_scene; }
 

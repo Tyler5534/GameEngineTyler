@@ -122,6 +122,7 @@ void Engine::InputSubsystem::Shutdown() {
 bool Engine::SceneSubsystem::Init(const BootConfig&) {
     Engine& engine = Engine::Get();
 
+
     // Tell the factory which type names mean which classes. Until this has
     // run, nothing in a scene file means anything.
     ComponentFactory::RegisterBuiltins();
@@ -430,7 +431,8 @@ bool Engine::BeginFrame() {
 }
 
 void Engine::Simulate() {
-    for (int step = 0; step < m_stepsThisFrame; ++step) {
+    int step =0;
+    for (int step = 0; step < m_stepsThisFrame; step++) {
         const float fixedStep = m_clock.FixedStepSeconds();
 
         //stages 100 - 500
@@ -449,6 +451,9 @@ void Engine::Simulate() {
                                      fixedStep);
 
         m_clock.OnStepConsumed();
+    }
+    if (m_scene != nullptr&& step == 0) {
+        DeferredOps::Apply(*m_scene);
     }
 }
 

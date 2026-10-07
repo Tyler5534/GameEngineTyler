@@ -412,6 +412,7 @@ void EditorApp::Run() {
                 SaveScene({});
             }
         }
+        
 
         // Step 4: the two views draw the world into their own pictures.
         if (m_scenePanel != nullptr && m_scenePanel->IsOpen()) {
