@@ -21,6 +21,7 @@
 #include <engine/platform/SdlHandles.h>
 #include <engine/render/Texture.h>
 
+
 namespace eng {
 
 class Window;

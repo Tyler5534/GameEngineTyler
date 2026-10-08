@@ -96,6 +96,9 @@ set(ENGINE_HEADERS
 add_library(engine SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})
 add_library(Engine2D::engine ALIAS engine)
 
+
+
+
 # ---------------------------------------------------------------------------
 #  WINDOWS_EXPORT_ALL_SYMBOLS
 #
@@ -143,5 +146,9 @@ target_link_libraries(engine PUBLIC nlohmann_json::nlohmann_json)
 # and it now lives in the editor - see editor/src/EditorGui.h for why. The
 # engine's only remaining connection to a tool layer is three function pointers
 # in tools/GuiHooks.h.
+
+add_library(stb_image INTERFACE)
+target_include_directories(stb_image SYSTEM INTERFACE ${stb_SOURCE_DIR})  
+target_link_libraries(engine PUBLIC stb_image)
 
 engine_set_warnings(engine)

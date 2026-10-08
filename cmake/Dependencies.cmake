@@ -90,3 +90,15 @@ FetchContent_MakeAvailable(nlohmann_json)
 if(ENGINE_WITH_IMGUI)
     include(cmake/imgui.cmake)
 endif()
+
+FetchContent_Declare(
+    stb    
+    GIT_REPOSITORY https://github.com/nothings/stb.git
+    GIT_TAG        master 
+    SYSTEM
+)
+
+add_library(stb_image INTERFACE)
+target_include_directories(stb_image SYSTEM INTERFACE ${stb_SOURCE_DIR})  
+target_link_libraries(engine PUBLIC stb_image)
+
