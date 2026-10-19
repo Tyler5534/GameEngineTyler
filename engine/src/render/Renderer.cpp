@@ -10,7 +10,7 @@
 #include <engine/render/Renderer.h>
 
 #include <SDL3/SDL.h>
-
+#include <stb_image.h>
 
 #include <algorithm>
 

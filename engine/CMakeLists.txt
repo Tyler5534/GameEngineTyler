@@ -148,7 +148,7 @@ target_link_libraries(engine PUBLIC nlohmann_json::nlohmann_json)
 # in tools/GuiHooks.h.
 
 add_library(stb_image INTERFACE)
-target_include_directories(stb_image SYSTEM INTERFACE ${stb_SOURCE_DIR})  
+target_include_directories(stb_image SYSTEM INTERFACE ${stb_SOURCE_DIR})
 target_link_libraries(engine PUBLIC stb_image)
 
 engine_set_warnings(engine)
