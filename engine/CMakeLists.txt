@@ -152,3 +152,4 @@ target_include_directories(stb_image SYSTEM INTERFACE ${stb_SOURCE_DIR})
 target_link_libraries(engine PUBLIC stb_image)
 
 engine_set_warnings(engine)
+

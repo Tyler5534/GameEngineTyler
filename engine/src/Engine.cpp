@@ -431,28 +431,28 @@ bool Engine::BeginFrame() {
 }
 
 void Engine::Simulate() {
-    int step =0;
-    for (int step = 0; step < m_stepsThisFrame; step++) {
+    int step = 0;
+    for (step = 0; step < m_stepsThisFrame; step++) {
         const float fixedStep = m_clock.FixedStepSeconds();
 
-        //stages 100 - 500
+        // Stages 100-500
         SystemScheduler::UpdateRange(0, SystemStage::kCollisionResponse, fixedStep);
 
-        //stage 500
+        // Stage 500
         MessageBus::Dispatch();
 
-        //stage 600
+        // Stage 600
         if (m_scene != nullptr) {
             DeferredOps::Apply(*m_scene);
         }
 
-        //stage 700 - camera
+        // Stage 700 - the Camera
         SystemScheduler::UpdateRange(SystemStage::kDeferred + 1, SystemStage::kFirstRenderStage,
                                      fixedStep);
 
         m_clock.OnStepConsumed();
     }
-    if (m_scene != nullptr&& step == 0) {
+    if (m_scene != nullptr && step == 0) {
         DeferredOps::Apply(*m_scene);
     }
 }
@@ -460,7 +460,7 @@ void Engine::Simulate() {
 void Engine::RenderWorld(Camera& camera, bool includeGizmos) {
     camera.SetViewportSize(Renderer::OutputSize());
 
-    Renderer::Clear(Color{18, 53, 84, 255});
+    Renderer::Clear(Color{18, 18, 22, 255});
 
     SpriteRenderSystem::Render(camera);
 
