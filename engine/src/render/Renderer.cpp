@@ -11,6 +11,7 @@
 
 #include <SDL3/SDL.h>
 #include <stb_image.h>
+#include <SDL3/SDL_audio.h>
 
 #include <algorithm>
 
